@@ -11,7 +11,7 @@ gauge_bin
 reports
 
 .DS_Store
-.idea/shelf
+.idea/
 /confluence/target
 /dependencies/repo
 /android.tests.dependencies
