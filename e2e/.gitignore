@@ -12,3 +12,5 @@ reports
 
 # Gradle build output
 build/
+
+.idea/
