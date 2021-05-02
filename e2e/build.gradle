@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+    id 'org.gauge' version '1.8.2'
+    id "org.jetbrains.kotlin.jvm" version "1.4.32"
+}
+
+group 'Gradle_example'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+configure([compileKotlin, compileTestKotlin]) {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+dependencies {
+    implementation 'com.sksamuel.hoplite:hoplite-core:1.4.0'
+    implementation 'com.thoughtworks.gauge:gauge-java:0.7.15'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    implementation 'io.github.microutils:kotlin-logging-jvm:2.0.6'
+    implementation group: 'org.dbunit', name: 'dbunit', version: '2.7.0'
+    implementation group: 'org.assertj', name: 'assertj-core', version: '3.19.0'
+}

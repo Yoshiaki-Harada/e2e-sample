@@ -1,3 +1,4 @@
-# テストサンプル
+# Specification Heading
+
 ## サンプル
 * テスト
