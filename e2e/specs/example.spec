@@ -1,4 +1,0 @@
-# Specification Heading
-
-## サンプル
-* テスト
