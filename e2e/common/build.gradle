@@ -1,0 +1,43 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.5.0-RC"
+}
+
+repositories {
+    // Use JCenter for resolving dependencies.
+    jcenter()
+}
+
+ext.versions = [
+        'ktor'   : '1.5.4',
+        "exposed": '0.31.1'
+]
+
+test {
+    useJUnitPlatform()
+}
+
+dependencies {
+    api platform(project(":platforms"))
+    implementation 'com.thoughtworks.gauge:gauge-java'
+    implementation "io.ktor:ktor-client-cio"
+    implementation "io.ktor:ktor-client-json"
+    implementation "io.ktor:ktor-client-json-jvm"
+    implementation "io.ktor:ktor-client-jackson"
+    implementation "io.ktor:ktor-client-apache"
+    implementation "io.ktor:ktor-client-logging-jvm"
+    implementation "org.dbunit:dbunit"
+    implementation 'com.sksamuel.hoplite:hoplite-core:1.4.0'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    implementation 'io.github.microutils:kotlin-logging-jvm:2.0.6'
+    implementation 'org.amshove.kluent:kluent:1.65'
+    implementation group: 'org.assertj', name: 'assertj-core', version: '3.19.0'
+    implementation group: 'com.jayway.jsonpath', name: 'json-path', version: '2.5.0'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
+    implementation "org.jetbrains.exposed:exposed-core:${versions.exposed}"
+    implementation "org.jetbrains.exposed:exposed-dao:${versions.exposed}"
+    implementation "org.jetbrains.exposed:exposed-jdbc:${versions.exposed}"
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.20'
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.0.0"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:5.0.0"
+    testImplementation "io.mockk:mockk:1.11.0"
+}

@@ -1,2 +1,4 @@
-rootProject.name = 'Gradle_example'
-
+rootProject.name = 'e2e'
+include 'common'
+include 'sns-api-e2e'
+include 'platforms'

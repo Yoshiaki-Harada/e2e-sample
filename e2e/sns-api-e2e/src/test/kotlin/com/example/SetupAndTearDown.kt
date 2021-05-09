@@ -6,6 +6,7 @@ import com.thoughtworks.gauge.AfterScenario
 import com.thoughtworks.gauge.BeforeScenario
 import com.thoughtworks.gauge.BeforeSuite
 import com.thoughtworks.gauge.ExecutionContext
+import extension.getSetupDirectory
 import mu.KotlinLogging
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -22,7 +23,8 @@ object SingleExecutor {
 }
 
 class SetupAndTearDown : FileBase {
-    private val logger = KotlinLogging.logger {  }
+    private val logger = KotlinLogging.logger { }
+
     @BeforeSuite()
     fun setUp() {
         SingleExecutor.execute {
@@ -33,7 +35,7 @@ class SetupAndTearDown : FileBase {
 
     @BeforeScenario(tags = ["sequential"])
     fun setUpScenario(context: ExecutionContext) {
-        getSetupDirectory(context)?.let {
+        context.getSetupDirectory()?.let {
             logger.debug { "Before Scenario.." }
             SnsDb.setUpForScenario(it)
         }

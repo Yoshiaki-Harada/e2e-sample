@@ -1,10 +1,13 @@
 package com.example.resource
 
 import com.example.Configuration
-import com.example.common.DataStoreClient
-import com.example.common.DatabaseBase
+import client.DataStoreClient
+import client.DatabaseBaseClient
 import com.example.common.FileBase
 import com.example.resource.tables.Users
+import extension.contains
+import extension.containsCsv
+import extension.relativePathFromResources
 import mu.KotlinLogging
 import org.dbunit.database.DatabaseConfig
 import org.dbunit.database.DatabaseConnection
@@ -13,12 +16,13 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.postgresql.ds.PGSimpleDataSource
+import printTable
 import java.io.File
 import java.sql.DriverManager
 import java.util.*
 
 
-object SnsDb : DatabaseBase, DataStoreClient, FileBase {
+object SnsDb : DatabaseBaseClient, DataStoreClient, FileBase {
     override val db = Database.connect(
         PGSimpleDataSource().apply {
             user = Configuration.db.user

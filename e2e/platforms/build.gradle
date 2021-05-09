@@ -1,0 +1,21 @@
+plugins {
+    id 'java-platform'
+}
+
+javaPlatform.allowDependencies()
+ext.versions = [
+        'ktor': '1.5.4',
+]
+dependencies {
+    constraints {
+        api('com.thoughtworks.gauge:gauge-java:0.7.15')
+        api("io.ktor:ktor-client-cio:1.5.4")
+        api("io.ktor:ktor-client-json:1.5.4")
+        api("io.ktor:ktor-client-json-jvm:1.5.4")
+        api("io.ktor:ktor-client-jackson:1.5.4")
+        api("io.ktor:ktor-client-apache:1.5.4")
+        api("io.ktor:ktor-client-logging-jvm:1.5.4")
+        api(group: 'org.dbunit', name: 'dbunit', version: '2.7.0')
+        api('io.github.microutils:kotlin-logging-jvm:2.0.6')
+    }
+}
