@@ -3,7 +3,7 @@ package com.example
 import client.DataStoreClient
 import com.example.common.JsonBase
 import com.thoughtworks.gauge.Step
-import extension.getJsonValueByFilterInArray
+import extension.getValuesByFilterInArray
 import mu.KotlinLogging
 import org.amshove.kluent.*
 
@@ -25,7 +25,7 @@ class JsonAssert : DataStoreClient, JsonBase {
     @Step("JSONのキー<arrayKey>の配列において、<filterKey>が<filterValue>の要素の<key>のバリューが<value>である")
     fun verifySpecificValue(arrayKey: String, filterKey: String, filterValue: String, key: String, value: String) {
         val result = getJsonDocumentContext(getJson())
-            .getJsonValueByFilterInArray<String>(
+            .getValuesByFilterInArray<String>(
                 arrayKey,
                 filterKey,
                 filterValue,

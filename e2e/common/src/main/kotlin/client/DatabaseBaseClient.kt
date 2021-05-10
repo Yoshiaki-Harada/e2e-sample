@@ -1,6 +1,6 @@
 package client
 
-import com.example.common.FileBase
+import com.example.common.ResourceBase
 import com.example.common.ITableBase
 import extension.contains
 import extension.containsCsv
@@ -9,7 +9,7 @@ import org.dbunit.dataset.csv.CsvDataSet
 import org.dbunit.operation.DatabaseOperation
 import org.jetbrains.exposed.sql.Database
 
-interface DatabaseBaseClient : FileBase, ITableBase {
+interface DatabaseBaseClient : ResourceBase, ITableBase {
     val connection: IDatabaseConnection
     val db: Database
     fun deleteAllData(path: String) {

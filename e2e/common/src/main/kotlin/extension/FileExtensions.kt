@@ -1,9 +1,9 @@
 package extension
 
-import com.example.common.FileBase
+import com.example.common.ResourceBase
 import java.io.File
 
-private object ResourceLoader : FileBase {}
+private object ResourceLoader : ResourceBase {}
 
 fun File.contains(fileName: String) = this.listFiles()?.map {
     it.name

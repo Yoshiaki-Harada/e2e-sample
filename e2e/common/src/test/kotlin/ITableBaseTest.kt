@@ -6,7 +6,7 @@ import org.dbunit.dataset.ITableMetaData
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 
-class ITableBaseTest : FileBase, ITableBase {
+class ITableBaseTest : ResourceBase, ITableBase {
 
     @AfterEach
     fun after() {
@@ -42,7 +42,7 @@ class ITableBaseTest : FileBase, ITableBase {
 
     @Test
     fun テーブルのDiffをカウントする() {
-        mockkStatic("ITableExtentionsKt")
+        mockkStatic("ITableExtensionsKt")
 
         val m1 = mockk<Map<List<Any>, Map<String, Any>>>()
         val m2 = mockk<Map<List<Any>, Map<String, Any>>>()

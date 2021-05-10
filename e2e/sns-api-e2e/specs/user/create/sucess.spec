@@ -1,5 +1,6 @@
 # ユーザーを作成することができる - user/create/success
 tags: sequential
+
 * "success/user"でユーザー作成のリクエストをする
 
 ## ユーザーの名前を登録できる

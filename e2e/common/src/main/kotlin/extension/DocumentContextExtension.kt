@@ -13,7 +13,7 @@ fun DocumentContext.getArray(
     arrayKey: String
 ): List<Map<String, Any>> = this.read("$.$arrayKey")
 
-fun <T> DocumentContext.getJsonValueByFilterInArray(
+fun <T> DocumentContext.getValuesByFilterInArray(
     arrayKey: String,
     filterKey: String,
     filterValue: String,

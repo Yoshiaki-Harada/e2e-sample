@@ -3,11 +3,10 @@ package com.example.resource
 import com.example.Configuration
 import client.DataStoreClient
 import client.DatabaseBaseClient
-import com.example.common.FileBase
+import com.example.common.SetupBase
 import com.example.resource.tables.Users
 import extension.contains
 import extension.containsCsv
-import extension.relativePathFromResources
 import mu.KotlinLogging
 import org.dbunit.database.DatabaseConfig
 import org.dbunit.database.DatabaseConnection
@@ -22,7 +21,7 @@ import java.sql.DriverManager
 import java.util.*
 
 
-object SnsDb : DatabaseBaseClient, DataStoreClient, FileBase {
+object SnsDb : DatabaseBaseClient, DataStoreClient, SetupBase {
     override val db = Database.connect(
         PGSimpleDataSource().apply {
             user = Configuration.db.user
@@ -42,11 +41,11 @@ object SnsDb : DatabaseBaseClient, DataStoreClient, FileBase {
             PostgresqlDataTypeFactory()
         )
     }
+    private val logger = KotlinLogging.logger { }
 
-    fun File.isSetUpDirectory() =
+    override fun File.isSetupDirectory() =
         this.isDirectory && this.name == "sns-db" && this.containsCsv() && this.contains("table-ordering.txt")
 
-    private val logger = KotlinLogging.logger { }
 
     fun printTable() {
         val table = connection.createDataSet().getTable("users")
@@ -55,26 +54,17 @@ object SnsDb : DatabaseBaseClient, DataStoreClient, FileBase {
 
     fun setUpDefault() {
         cleanData()
-        insertData("default")
+        setupRecursively("default") { insertCsvData(it) }
     }
 
     fun setUpForScenario(directory: String) {
         cleanData()
-        insertData("scenarios/$directory")
+        setupRecursively("scenarios/$directory") { insertCsvData(it) }
     }
 
     private fun cleanData() {
         logger.debug { "CLEAR.. sns-db" }
         deleteAllData("clean/sns-db")
-    }
-
-    private fun insertData(rootPath: String) {
-        getFileFromResource(rootPath).walkTopDown().forEach {
-            if (it.isSetUpDirectory()) {
-                logger.debug { "SETUP.. ${it.relativePathFromResources()}" }
-                insertCsvData(it.relativePathFromResources())
-            }
-        }
     }
 
     fun storeUsersTable() {

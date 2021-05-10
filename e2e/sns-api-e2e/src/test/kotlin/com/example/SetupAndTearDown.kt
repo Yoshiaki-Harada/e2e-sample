@@ -1,6 +1,6 @@
 package com.example
 
-import com.example.common.FileBase
+import com.example.common.ResourceBase
 import com.example.resource.SnsDb
 import com.thoughtworks.gauge.AfterScenario
 import com.thoughtworks.gauge.BeforeScenario
@@ -10,8 +10,6 @@ import extension.getSetupDirectory
 import mu.KotlinLogging
 import java.util.concurrent.atomic.AtomicBoolean
 
-class InsufficientTagException(private val tagMessage: String, private val actual: List<String>) :
-    Exception("$tagMessage \n現状ついているタグは $actual です")
 
 object SingleExecutor {
     private val done: AtomicBoolean = AtomicBoolean(false)
@@ -22,7 +20,7 @@ object SingleExecutor {
     }
 }
 
-class SetupAndTearDown : FileBase {
+class SetupAndTearDown : ResourceBase {
     private val logger = KotlinLogging.logger { }
 
     @BeforeSuite()
