@@ -1,8 +1,6 @@
 package com.example
 
-import com.example.ConstructionBase.Companion.INITIAL_DIR
-import com.example.ConstructionBase.Companion.SEQUENTIAL_DIR
-import com.example.common.ResourceBase
+
 import com.example.resource.SnsDb
 import com.thoughtworks.gauge.AfterScenario
 import com.thoughtworks.gauge.BeforeScenario
@@ -10,11 +8,10 @@ import com.thoughtworks.gauge.BeforeSuite
 import com.thoughtworks.gauge.ExecutionContext
 import extension.getSetupDirectory
 import mu.KotlinLogging
-import java.io.File
-import java.lang.IllegalStateException
+import kotlin.IllegalStateException
 
 
-class SetupAndTearDown : ResourceBase, ConstructionBase {
+class SetupAndTearDown : ConstructionBase {
     private val logger = KotlinLogging.logger { }
 
 
@@ -25,6 +22,13 @@ class SetupAndTearDown : ResourceBase, ConstructionBase {
             logger.debug { "Before Suite.." }
             setUpDb()
         }
+    }
+
+    @BeforeScenario()
+    fun checkSequential(context: ExecutionContext) {
+        if (context.getSetupDirectory() == null) return
+        if (!context.allTags.contains("sequential"))
+            throw IllegalStateException("tag:sequentialがついていない場合 ${context.getSetupDirectory()} はセットアップされません。")
     }
 
     @BeforeScenario(tags = ["sequential"])
