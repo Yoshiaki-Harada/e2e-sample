@@ -3,6 +3,8 @@ package com.example.resource
 import com.example.Configuration
 import client.DataStoreClient
 import client.DatabaseBaseClient
+import com.example.ConstructionBase.Companion.INITIAL_DIR
+import com.example.ConstructionBase.Companion.SEQUENTIAL_DIR
 import com.example.common.ResourceSetupBase
 import com.example.resource.tables.Users
 import extension.contains
@@ -54,12 +56,12 @@ object SnsDb : DatabaseBaseClient, DataStoreClient, ResourceSetupBase {
 
     fun setUpDefault() {
         cleanData()
-        setupRecursively("default") { insertCsvData(it) }
+        setupRecursively(INITIAL_DIR) { insertCsvData(it) }
     }
 
     fun setupForScenario(directory: String) {
         cleanData()
-        setupRecursively("scenarios/$directory") { insertCsvData(it) }
+        setupRecursively("$SEQUENTIAL_DIR/$directory") { insertCsvData(it) }
     }
 
     private fun cleanData() {

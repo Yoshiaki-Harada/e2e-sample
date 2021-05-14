@@ -1,6 +1,7 @@
 package com.example
 
 import client.DataStoreClient
+import com.example.ConstructionBase.Companion.SEQUENTIAL_DIR
 import com.example.common.ResourceBase
 import com.example.common.JsonBase
 import com.example.common.assert.JsonOrderAssert
@@ -28,7 +29,7 @@ class SnsApiSpec : DataStoreClient, ResourceBase, JsonBase, JsonOrderAssert {
     @Step("<file>でユーザー作成のリクエストをする")
     fun createUser(file: String) {
         val user =
-            jacksonObjectMapper().readValue<Map<String, Any>>(getFileFromResource("scenarios/user/create/$file.json"))
+            jacksonObjectMapper().readValue<Map<String, Any>>(getFileFromResource("$SEQUENTIAL_DIR/user/create/$file.json"))
         SnsApi.createUser(user)
     }
 
@@ -37,7 +38,7 @@ class SnsApiSpec : DataStoreClient, ResourceBase, JsonBase, JsonOrderAssert {
         SnsDb.storeUsersTable()
         val user =
             jacksonObjectMapper()
-                .readValue<Map<String, Any>>(getFileFromResource("scenarios/user/update/$item.json"))
+                .readValue<Map<String, Any>>(getFileFromResource("$SEQUENTIAL_DIR/user/update/$item.json"))
         SnsApi.updateUser(id, user)
     }
 
