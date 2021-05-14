@@ -4,18 +4,18 @@ import extension.relativePathFromResources
 import mu.KotlinLogging
 import java.io.File
 
-interface SetupBase : ResourceBase {
+interface ResourceSetupBase : ResourceBase {
     companion object {
         private val logger = KotlinLogging.logger {}
     }
 
     fun File.isSetupDirectory(): Boolean
 
-    fun setupRecursively(rootPath: String, setUpFunction: (String) -> Unit) {
+    fun setupRecursively(rootPath: String, setupFunction: (String) -> Unit) {
         getFileFromResource(rootPath).walkTopDown().forEach {
             if (it.isSetupDirectory()) {
                 logger.debug { "SETUP.. ${it.relativePathFromResources()}" }
-                setUpFunction(it.relativePathFromResources())
+                setupFunction(it.relativePathFromResources())
             }
         }
     }

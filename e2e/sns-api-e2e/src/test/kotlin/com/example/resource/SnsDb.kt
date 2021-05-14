@@ -3,7 +3,7 @@ package com.example.resource
 import com.example.Configuration
 import client.DataStoreClient
 import client.DatabaseBaseClient
-import com.example.common.SetupBase
+import com.example.common.ResourceSetupBase
 import com.example.resource.tables.Users
 import extension.contains
 import extension.containsCsv
@@ -21,7 +21,7 @@ import java.sql.DriverManager
 import java.util.*
 
 
-object SnsDb : DatabaseBaseClient, DataStoreClient, SetupBase {
+object SnsDb : DatabaseBaseClient, DataStoreClient, ResourceSetupBase {
     override val db = Database.connect(
         PGSimpleDataSource().apply {
             user = Configuration.db.user
@@ -57,7 +57,7 @@ object SnsDb : DatabaseBaseClient, DataStoreClient, SetupBase {
         setupRecursively("default") { insertCsvData(it) }
     }
 
-    fun setUpForScenario(directory: String) {
+    fun setupForScenario(directory: String) {
         cleanData()
         setupRecursively("scenarios/$directory") { insertCsvData(it) }
     }

@@ -24,7 +24,6 @@ interface ITableBase {
     }
 
     fun diffRecordValueCount(table1: ITable, table2: ITable): Int {
-
         check(table1.tableMetaData == table2.tableMetaData) {
             "Tableが異なります"
         }
