@@ -25,11 +25,18 @@ interface DatabaseBaseClient : ResourceBase, ITableBase {
         check(file.contains("table-ordering.txt")) {
             "Path: $path 内にtable-ordering.txtが見つかりません"
         }
-        check(file.containsCsv()) {
-            "Path: $path csvファイルが見つかりません"
+        val orders = file.listFiles()
+            .first { it.name == "table-ordering.txt" }!!
+            .let {
+                it.readText()
+            }.let {
+                it.split("\n")
+            }.filter { it.isNotBlank() }
+
+        val d = orders.reversed().let {
+            connection.createDataSet(it.toTypedArray())
         }
-        val dataSet = CsvDataSet(file)
-        DatabaseOperation.DELETE_ALL.execute(connection, dataSet)
+        DatabaseOperation.DELETE_ALL.execute(connection, d)
     }
 
     fun insertCsvData(file: File) {
