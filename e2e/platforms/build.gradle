@@ -17,5 +17,6 @@ dependencies {
         api("io.ktor:ktor-client-logging-jvm:1.5.4")
         api(group: 'org.dbunit', name: 'dbunit', version: '2.7.0')
         api('io.github.microutils:kotlin-logging-jvm:2.0.6')
+        api("org.slf4j:slf4j-simple:1.7.29")
     }
 }

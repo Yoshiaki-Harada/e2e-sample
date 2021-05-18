@@ -23,8 +23,8 @@ fun ITable.createMap(): Map<PrimaryKeys, ColumnRecordMap> = List(this.rowCount) 
 
 fun ITable.printTable() {
     val map = this.createMap()
-    logger.debug { "${this.tableMetaData.tableName}: " }
-    logger.debug {
+    logger.info { "${this.tableMetaData.tableName}: " }
+    logger.info {
         map.values.toList()
     }
 }

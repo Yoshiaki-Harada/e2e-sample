@@ -11,11 +11,11 @@ interface ResourceSetupBase : ResourceBase {
 
     fun File.isSetupDirectory(): Boolean
 
-    fun setupRecursively(rootPath: String, setupFunction: (String) -> Unit) {
+    fun setupRecursively(rootPath: String, setupFunction: (File) -> Unit) {
         getFileFromResource(rootPath).walkTopDown().forEach {
             if (it.isSetupDirectory()) {
-                logger.debug { "SETUP.. ${it.relativePathFromResources()}" }
-                setupFunction(it.relativePathFromResources())
+                logger.info { "SETUP.. ${it.relativePathFromResources()}" }
+                setupFunction(it)
             }
         }
     }

@@ -18,8 +18,9 @@ class SetupAndTearDown : ConstructionBase {
     @BeforeSuite()
     fun setUp() {
         checkDirectoryConstructions()
+        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
         SingleExecutor.execute {
-            logger.debug { "Before Suite.." }
+            logger.info { "Before Suite.." }
             setUpDb()
         }
     }
@@ -34,14 +35,14 @@ class SetupAndTearDown : ConstructionBase {
     @BeforeScenario(tags = ["sequential"])
     fun setUpScenario(context: ExecutionContext) {
         context.getSetupDirectory()?.let {
-            logger.debug { "Before Scenario.." }
+            logger.info { "Before Scenario.." }
             SnsDb.setupForScenario(it)
         }
     }
 
     @AfterScenario(tags = ["sequential"])
     fun teardownScenario(context: ExecutionContext) {
-        logger.debug { "After Scenario.." }
+        logger.info { "After Scenario.." }
         if (context.currentScenario.isFailing) SnsDb.printTable()
         setUpDb()
     }

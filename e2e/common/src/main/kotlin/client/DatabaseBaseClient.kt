@@ -4,11 +4,13 @@ import com.example.common.ResourceBase
 import com.example.common.ITableBase
 import extension.contains
 import extension.containsCsv
+import extension.relativePathFromResources
 import mu.KotlinLogging
 import org.dbunit.database.IDatabaseConnection
 import org.dbunit.dataset.csv.CsvDataSet
 import org.dbunit.operation.DatabaseOperation
 import org.jetbrains.exposed.sql.Database
+import java.io.File
 
 interface DatabaseBaseClient : ResourceBase, ITableBase {
     val connection: IDatabaseConnection
@@ -30,13 +32,12 @@ interface DatabaseBaseClient : ResourceBase, ITableBase {
         DatabaseOperation.DELETE_ALL.execute(connection, dataSet)
     }
 
-    fun insertCsvData(path: String) {
-        val file = getFileFromResource(path)
+    fun insertCsvData(file: File) {
         check(file.contains("table-ordering.txt")) {
-            "Path: $path 内にtable-ordering.txtが見つかりません"
+            "Path: ${file.relativePathFromResources()} 内にtable-ordering.txtが見つかりません"
         }
         check(file.containsCsv()) {
-            "Path: $path 内にcsvファイルが見つかりません"
+            "Path: ${file.relativePathFromResources()} 内にcsvファイルが見つかりません"
         }
         val dataSet = CsvDataSet(file)
         kotlin.runCatching {

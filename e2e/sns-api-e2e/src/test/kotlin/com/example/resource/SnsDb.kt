@@ -65,7 +65,7 @@ object SnsDb : DatabaseBaseClient, DataStoreClient, ResourceSetupBase {
     }
 
     private fun cleanData() {
-        logger.debug { "CLEAR.. sns-db" }
+        logger.info { "CLEAR.. sns-db" }
         deleteAllData("clean/sns-db")
     }
 
