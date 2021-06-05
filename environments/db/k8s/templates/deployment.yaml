@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+metadata:
+  name: sns-db
+  namespace: {{ .Values.namespace }}
+  labels:
+    revision: {{ .Values.revision }}
+kind: Deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: sns-db
+        revision: {{ .Values.revision }}
+    spec:
+      containers:
+        - name: sns-db
+          image: haradayoshiaki777/sns-db:{{ .Values.revision }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5432
+          resources:
+            requests:
+              memory: {{ .Values.resources.requests.memory }}
+          env:
+            - name: POSTGRES_USER
+              value: developer
+            - name: POSTGRES_PASSWORD
+              value: developer
+  selector:
+    matchLabels:
+      name: sns-db
+

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sns-api
+  namespace: {{ .Values.namespace }}
+  labels:
+    revision: {{ .Values.revision }}
+spec:
+  replicas: {{ .Values.replicas }}
+  template:
+    metadata:
+      labels:
+        name: sns-api
+        version: {{ .Values.color }}
+        namespace: {{ .Values.namespace }}
+        revision: {{ .Values.revision }}
+    spec:
+      containers:
+        - name: sns-api
+          image: haradayoshiaki777/sns-api:{{ .Values.revision }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+          resources:
+            requests:
+              memory: {{ .Values.resources.requests.memory }}
+          env:
+            - name: DB_URL
+              value: jdbc:postgresql://sns-db-svc:5432/sns_db
+  selector:
+    matchLabels:
+      name: sns-api
+      version: {{ .Values.color }}

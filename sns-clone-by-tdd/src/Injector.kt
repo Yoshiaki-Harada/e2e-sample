@@ -10,6 +10,9 @@ import com.harada.port.TweetWriteStore
 import com.harada.port.UserQueryService
 import com.harada.port.UserWriteStore
 import com.harada.usecase.*
+import com.sksamuel.hoplite.ConfigLoader
+import io.ktor.application.*
+import io.ktor.server.engine.*
 import org.jetbrains.exposed.sql.Database
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
@@ -17,9 +20,16 @@ import org.kodein.di.generic.instance
 import org.kodein.di.generic.singleton
 import org.postgresql.ds.PGSimpleDataSource
 
+
+data class Config(val ktor: Ktor) {
+    data class Ktor(val db: Db) {
+        data class Db(val url: String)
+    }
+}
+
 object Injector {
     val useCaseModule = Kodein.Module("useCase") {
-        bind<IUserCreateUseCase>() with singleton { UserCreateUseCase(instance(),instance()) }
+        bind<IUserCreateUseCase>() with singleton { UserCreateUseCase(instance(), instance()) }
         bind<IUserUpdateUseCase>() with singleton { UserUpdateUseCase(instance(), instance()) }
         bind<ITweetCreateUseCase>() with singleton { TweetCreateUseCase(instance(), instance(), instance()) }
         bind<ITweetUpdateUseCase>() with singleton { TweetUpdateUseCase(instance()) }
@@ -38,7 +48,15 @@ object Injector {
             )
         }
         bind<UserQueryService>() with singleton { UserQueryPostgresDB(instance(), instance()) }
-        bind<TweetQueryService>() with singleton { TweetQueryPostgresDB(instance(), instance(), instance(),instance(),instance()) }
+        bind<TweetQueryService>() with singleton {
+            TweetQueryPostgresDB(
+                instance(),
+                instance(),
+                instance(),
+                instance(),
+                instance()
+            )
+        }
     }
 
     val driverModule = Kodein.Module("driver") {
@@ -51,11 +69,13 @@ object Injector {
     }
 
     val dbModule = Kodein.Module("dataSource") {
+
+        val config = ConfigLoader().loadConfigOrThrow<Config>("/application.conf")
         bind<Database>() with singleton {
             val dataSource = PGSimpleDataSource()
             dataSource.user = "developer"
             dataSource.password = "developer"
-            dataSource.setURL("jdbc:postgresql://localhost:5432/sns_db")
+            dataSource.setURL(config.ktor.db.url)
             dataSource.loggerLevel = "DEBUG"
             Database.connect(dataSource)
         }

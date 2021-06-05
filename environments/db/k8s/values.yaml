@@ -1,0 +1,5 @@
+revision: latest
+namespace: sns
+resources:
+  requests:
+    memory: 500Mi

@@ -1,15 +1,16 @@
 apiVersion: v1
-kind: Service
 metadata:
-  name: sns-api-svc
+  name: sns-db-svc
   namespace: {{ .Values.namespace }}
   labels:
     revision: {{ .Values.revision }}
+kind: Service
 spec:
-  type: NodePort
   ports:
-    - port: 15000
+    - name: sns-db-svc
       protocol: TCP
-      targetPort: 8080
+      port: 5432
+      targetPort: 5432
+  type: NodePort
   selector:
-    name: sns-api
+    name: sns-db
