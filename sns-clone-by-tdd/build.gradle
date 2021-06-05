@@ -5,14 +5,16 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.1.0'
     }
 }
 
 apply plugin: 'kotlin'
 apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 group 'com.harada'
-version '0.0.1'
+version '1.0.0'
 mainClassName = "io.ktor.server.netty.EngineMain"
 
 sourceSets {
@@ -67,3 +69,8 @@ compileTestKotlin {
     }
 }
 
+shadowJar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
