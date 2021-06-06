@@ -12,6 +12,14 @@ ext.versions = [
         "exposed": '0.31.1'
 ]
 
+
+sourceSets {
+    test {
+        // クラスファイルと同じディレクトリへリソースファイルを出力する設定
+        output.resourcesDir = output.classesDirs[0]
+    }
+}
+
 test {
     useJUnitPlatform()
 }
