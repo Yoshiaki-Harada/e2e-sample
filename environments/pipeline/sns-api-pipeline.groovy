@@ -44,7 +44,7 @@ pipeline {
                 DB_PORT=svcPort("minikube", "sns", "sns-db-svc")
                 DB_URL="jdbc:postgresql://$E2E_CONTEXT_HOST:$DB_PORT/sns_db"
                 E2E_IMAGE="haradayoshiaki/gauge-gradle:latest"
-                E2E_ARGS="-e DB_URL=jdbc:postgresql://192.168.39.122:30158/sns_db -u root -v "$PWD":/home/gradle/project -w /home/gradle/project"
+                E2E_ARGS="-e DB_URL=jdbc:postgresql://192.168.39.122:30158/sns_db -u root -v /var/jenkins_home/workspace/sns-api-pipeline/e2e:/home/gradle/project -w /home/gradle/project"
             }
             parallel {
                 stage('sequential') {
@@ -57,8 +57,7 @@ pipeline {
                     }
                     steps {
                         dir("e2e") {
-                            sh """echo $API_URL"""
-                            sh """docker run --rm -e API_URL=$API_URL -e DB_URL=$DB_URL -u gradle -v "$PWD":/home/gradle/project -w /home/gradle/project gauge-gradle gradle gauge"""
+                            sh """gradle gauge"""
                         }
                     }
                 }
@@ -71,4 +70,3 @@ pipeline {
         }
     }
 }
-docker run --rm -e API_URL=http://192.168.39.122:30176 -e DB_URL=jdbc:postgresql://192.168.39.122:30158/sns_db -u gradle -v
