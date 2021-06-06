@@ -1,22 +1,22 @@
-pipeline{
+pipeline {
     agent any
     options {
         skipDefaultCheckout()
     }
-    stages{
-        stage("A"){
-            steps{
-                echo "========executing A========"
+    stages {
+        stage('checkout scm for repository') {
+            steps {
+                checkout scm
             }
-            post{
-                always{
-                    echo "========always========"
-                }
-                success{
-                    echo "========A executed successfully========"
-                }
-                failure{
-                    echo "========A execution failed========"
+        }
+        stage('deploy') {
+            parallel {
+                stage('deploy') {
+                    dir('environments') {
+                        script {
+                            sh """helm template app/k8s/ | kubectl --context minikube apply -f -"""
+                        }
+                    }
                 }
             }
         }
