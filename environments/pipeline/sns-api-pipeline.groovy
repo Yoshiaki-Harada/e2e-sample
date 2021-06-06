@@ -1,4 +1,4 @@
-def scvPort(context, ns, svc) {
+def svcPort(context, ns, svc) {
     return sh(script: "kubectl --context ${context} get svc ${svc} -n ${ns} -o=jsonpath='{.spec.ports[0].nodePort}", returnStdout: true)
 }
 
