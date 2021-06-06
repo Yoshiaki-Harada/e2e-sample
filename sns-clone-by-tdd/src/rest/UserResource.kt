@@ -12,10 +12,10 @@ import io.ktor.application.featureOrNull
 import io.ktor.application.install
 import io.ktor.http.*
 import io.ktor.locations.*
+import io.ktor.locations.get
 import io.ktor.request.receive
 import io.ktor.response.*
-import io.ktor.routing.post
-import io.ktor.routing.routing
+import io.ktor.routing.*
 import mu.KotlinLogging
 import org.kodein.di.Kodein
 import org.kodein.di.generic.instance

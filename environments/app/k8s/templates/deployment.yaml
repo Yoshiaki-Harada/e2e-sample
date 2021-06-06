@@ -24,6 +24,12 @@ spec:
           resources:
             requests:
               memory: {{ .Values.resources.requests.memory }}
+          livenessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            httpGet:
+              path: /systems/ping
+              port: 8081
           env:
             - name: DB_URL
               value: jdbc:postgresql://sns-db-svc:5432/sns_db
