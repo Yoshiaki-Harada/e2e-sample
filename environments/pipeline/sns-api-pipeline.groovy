@@ -1,9 +1,7 @@
 pipeline{
     agent any
     options {
-        newContainerPerStage()
         skipDefaultCheckout()
-        timestamp()
     }
     stages{
         stage("A"){
