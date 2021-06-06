@@ -1,3 +1,7 @@
+def scvPort(context, ns, svc) {
+    return sh(script: "kubectl --context ${context} get svc ${svc} -n ${ns} -o=jsonpath='{.spec.ports[0].nodePort}", returnStdout: true)
+}
+
 pipeline {
     agent any
     options {
@@ -33,10 +37,20 @@ pipeline {
             }
         }
         stage('e2e') {
+            environment {
+                E2E_CONTEXT_HOST = sh(script: "minikube ip", returnStdout: true)
+                API_PORT=svcPort("minikube", "sns", "sns-api-svc")
+                API_URL="http://$E2E_CONTEXT_HOST:$API_PORT"
+                DB_PORT=svcPort("minikube", "sns", "sns-db-svc")
+                DB_URL="jdbc:postgresql://$E2E_CONTEXT_HOST:$DB_PORT/sns_db"
+            }
             parallel {
                 stage('sequential') {
                     steps {
-                        sh """echo sequential e2e"""
+                        dir("e2e") {
+                            sh """echo $API_URL"""
+                            sh """docker run --rm -e API_URL=$API_URL -e DB_URL=jdbc:postgresql://192.168.39.122:30158/sns_db -u gradle -v "$PWD":/home/gradle/project -w /home/gradle/project gauge-gradle gradle gauge"""
+                        }
                     }
                 }
                 stage('parallel') {
