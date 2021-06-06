@@ -16,7 +16,7 @@ pipeline {
                         dir('environments') {
                             script {
                                 sh """helm template app/k8s/ | kubectl --context minikube apply -f -"""
-                                sg """kubectl wait --for=condition=ready pod -l name=sns-api -n sns --timeout=30s"""
+                                sh """kubectl wait --for=condition=ready pod -l name=sns-api -n sns --timeout=30s"""
                             }
                         }
                     }
