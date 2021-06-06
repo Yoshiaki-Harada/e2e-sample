@@ -36,12 +36,12 @@ pipeline {
             parallel {
                 stage('sequential') {
                     steps {
-                        sh """echo 'sequential e2e'"""
+                        sh """echo sequential e2e"""
                     }
                 }
                 stage('parallel') {
                     steps {
-                        sh """echo 'parallel e2e'"""
+                        sh """echo parallel e2e"""
                     }
                 }
             }
