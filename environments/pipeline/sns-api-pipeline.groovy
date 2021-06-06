@@ -11,11 +11,14 @@ pipeline {
         }
         stage('deploy') {
             parallel {
-                stage('deploy') {
-                    steps {
-                        dir('environments') {
-                            script {
-                                sh """helm template app/k8s/ | kubectl --context minikube apply -f -"""
+                resources = ['db', 'app']
+                resources.each { resource ->
+                    stage(resource) {
+                        steps {
+                            dir('environments') {
+                                script {
+                                    sh """helm template $resource/k8s/ | kubectl --context minikube apply -f -"""
+                                }
                             }
                         }
                     }
