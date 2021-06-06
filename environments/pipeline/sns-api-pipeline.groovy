@@ -15,7 +15,7 @@ pipeline {
                     steps {
                         dir('environments') {
                             script {
-                                sh ""'helm template app/k8s/ | kubectl --context minikube apply -f -'""
+                                sh """helm template app/k8s/ | kubectl --context minikube apply -f -"""
                             }
                         }
                     }
