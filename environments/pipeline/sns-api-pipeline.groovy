@@ -20,7 +20,7 @@ pipeline {
                         dir('environments') {
                             script {
                                 sh """helm template --set name=sns-e2e app/k8s/ | kubectl --context minikube apply -f -"""
-                                sh """kubectl wait --for=condition=ready pod -l name=sns-api -n sns --timeout=120s"""
+                                sh """kubectl wait --for=condition=ready pod -l name=sns-api -n sns-e2e --timeout=120s"""
                             }
                         }
                     }
@@ -30,7 +30,7 @@ pipeline {
                         dir('environments') {
                             script {
                                 sh """helm template --set name=sns-e2e db/k8s/ | kubectl --context minikube apply -f -"""
-                                sh """kubectl wait --for=condition=ready pod -l name=sns-db -n sns --timeout=120s"""
+                                sh """kubectl wait --for=condition=ready pod -l name=sns-db -n sns-e2e --timeout=120s"""
                             }
                         }
                     }
