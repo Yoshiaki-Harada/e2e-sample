@@ -51,17 +51,17 @@ pipeline {
                 build(
                     job: "sns-api-deployment",
                     parameters: [[
-                        $class: 'StringPrameterValue',
+                        $class: 'StringParameterValue',
                         name: 'COMMIT_HASH',
                         value: COMMIT_HASH
                     ],
                     [
-                        $class: 'StringPrameterValue',
+                        $class: 'StringParameterValue',
                         name: 'ENV',
                         value: "e2e"
                     ],
                     [
-                        $class: 'StringPrameterValue',
+                        $class: 'StringParameterValue',
                         name: 'NAMESPACE',
                         value: "sns-e2e"
                     ]]
