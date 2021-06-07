@@ -16,23 +16,29 @@ pipeline {
             }
         }
         stage('Commit Hash') {
-            script {
-                COMMIT_HASH = sh(returnStdout: true, script: 'echo -n `git rev-parse --short HEAD`')
+            steps {
+                script {
+                    COMMIT_HASH = sh(returnStdout: true, script: 'echo -n `git rev-parse --short HEAD`')
+                }
             }
         }
         stage('build') {
             parallel {
                 stage('build') {
-                    dir('environments/app/docker') {
-                        script {
-                            sh "./build_and_push.sh $COMMIT_HASH"
+                    steps {
+                        dir('environments/app/docker') {
+                            script {
+                                sh "./build_and_push.sh $COMMIT_HASH"
+                            }
                         }
                     }
                 }
                 stage("build db") {
-                    dir('environments/db/docker') {
-                        script {
-                            sh "./build_and_push.sh $COMMIT_HASH"
+                    steps {
+                        dir('environments/db/docker') {
+                            script {
+                                sh "./build_and_push.sh $COMMIT_HASH"
+                            }
                         }
                     }
                 }
