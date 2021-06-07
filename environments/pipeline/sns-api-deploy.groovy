@@ -46,7 +46,7 @@ pipeline {
                     steps {
                         dir('environments') {
                             script {
-                                sh """helm template --set namespace=sns-e2e --set revision=$COMMIT_HASH values-${ENV} db/k8s/ | kubectl --context minikube apply -f -"""
+                                sh """helm template --set namespace=sns-e2e --set revision=${COMMIT_HASH} values-${ENV} db/k8s/ | kubectl --context minikube apply -f -"""
                                 sh """kubectl wait --for=condition=ready pod -l name=sns-db -n ${NS} --timeout=120s"""
                             }
                         }
