@@ -18,8 +18,15 @@ pipeline {
                                                     name: params.COMMIT_HASH
                                             ]]
                 ])
-                ENV=params.ENV
-                NS=params.NAMESPACE
+
+            }
+        }
+        stage('envronment and namespace') {
+            steps {
+                script {
+                   ENV=params.ENV
+                   NS=params.NAMESPACE
+                }
             }
         }
         stage('deploy to ${ENV}') {
