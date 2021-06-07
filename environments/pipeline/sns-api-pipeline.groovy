@@ -41,7 +41,6 @@ pipeline {
             environment {
                 E2E_CONTEXT_HOST = sh(script: "kubectl --context minikube get nodes -o=jsonpath=\'{.items[0].status.addresses[0].address}\'", returnStdout: true)
                 E2E_IMAGE="haradayoshiaki/gauge-gradle:latest"
-                E2E_CONTEXT_HOST = sh(script: "kubectl --context minikube get nodes -o=jsonpath=\'{.items[0].status.addresses[0].address}\'", returnStdout: true)
                 API_PORT=svcPort("minikube", "sns-e2e", "sns-api-svc")
                 API_URL="http://$E2E_CONTEXT_HOST:$API_PORT"
                 DB_PORT=svcPort("minikube", "sns-e2e", "sns-db-svc")
