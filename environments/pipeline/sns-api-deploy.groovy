@@ -30,13 +30,13 @@ pipeline {
                 }
             }
         }
-        stage('deploy to ${parms.ENV}') {
+        stage("deploy to ${parms.ENV}") {
             parallel {
                 stage('deploy api') {
                     steps {
-                        dir('environments') {
+                        dir('environments/app') {
                             script {
-                                sh """helm template --set revision=${COMMIT_HASH} -f values-${ENV}.yaml app/k8s/ | kubectl --context minikube apply -f -"""
+                                sh """helm template --set revision=${COMMIT_HASH} -f k8s/values-${ENV}.yaml k8s/ | kubectl --context minikube apply -f -"""
                                 sh """kubectl wait --for=condition=ready pod -l name=sns-api -n ${NS} --timeout=120s"""
                             }
                         }
@@ -44,9 +44,9 @@ pipeline {
                 }
                 stage('deploy db') {
                     steps {
-                        dir('environments') {
+                        dir('environments/db') {
                             script {
-                                sh """helm template --set revision=${COMMIT_HASH} values-${ENV}.yaml db/k8s/ | kubectl --context minikube apply -f -"""
+                                sh """helm template --set revision=${COMMIT_HASH} k8s/values-${ENV}.yaml k8s/ | kubectl --context minikube apply -f -"""
                                 sh """kubectl wait --for=condition=ready pod -l name=sns-db -n ${NS} --timeout=120s"""
                             }
                         }
