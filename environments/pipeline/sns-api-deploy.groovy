@@ -30,13 +30,13 @@ pipeline {
                 }
             }
         }
-        stage('deploy to ${ENV}') {
+        stage('deploy to ${parms.ENV}') {
             parallel {
                 stage('deploy api') {
                     steps {
                         dir('environments') {
                             script {
-                                sh """helm template --set namespace=sns-e2e --set revision=$COMMIT_HASH -f values-${ENV} app/k8s/ | kubectl --context minikube apply -f -"""
+                                sh """helm template --set namespace=sns-e2e --set revision=${COMMIT_HASH} -f values-${ENV} app/k8s/ | kubectl --context minikube apply -f -"""
                                 sh """kubectl wait --for=condition=ready pod -l name=sns-api -n ${NS} --timeout=120s"""
                             }
                         }
