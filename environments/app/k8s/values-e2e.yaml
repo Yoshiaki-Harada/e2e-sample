@@ -1,0 +1,7 @@
+revision: latest
+color: blue
+namespace: sns-e2e
+replicas: 1
+resources:
+  requests:
+    memory: 500Mi

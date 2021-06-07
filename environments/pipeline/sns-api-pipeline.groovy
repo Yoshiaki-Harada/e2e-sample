@@ -95,27 +95,6 @@ pipeline {
                         }
                     }
                 }
-                // stage('parallel') {
-                //     environment {
-                //         API_PORT=svcPort("minikube", "sns", "sns-api-svc")
-                //         API_URL="http://$E2E_CONTEXT_HOST:$API_PORT"
-                //         DB_PORT=svcPort("minikube", "sns", "sns-db-svc")
-                //         DB_URL="jdbc:postgresql://$E2E_CONTEXT_HOST:$DB_PORT/sns_db"
-                //         E2E_ARGS="-e DB_URL=$DB_URL -u root -v /var/jenkins_home/workspace/sns-api-pipeline/e2e:/home/gradle/project -w /home/gradle/project"
-                //     }
-                //     agent {
-                //         docker {
-                //             image E2E_IMAGE
-                //             args E2E_ARGS
-                //             reuseNode true
-                //         }
-                //     }
-                //     steps {
-                //         dir("e2e") {
-                //             sh """ gradle gauge -Ptags="!sequential" """
-                //         }
-                //     }
-                // }
             }
         }
 
