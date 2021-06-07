@@ -30,7 +30,7 @@ pipeline {
                 }
             }
         }
-        stage("deploy to ${parms.ENV}") {
+        stage('deploy to ${ENV}') {
             parallel {
                 stage('deploy api') {
                     steps {
