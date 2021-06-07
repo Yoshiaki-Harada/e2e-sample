@@ -3,7 +3,9 @@ def svcPort(context, ns, svc) {
 }
 
 def COMMIT_HASH=""
-
+def API_IMAGE="haradayoshiaki777/sns-db"
+def DB_IMAGE="haradayoshiaki777/sns-api"
+def DB_NS="sns"
 pipeline {
     agent any
     options {
@@ -24,7 +26,7 @@ pipeline {
         }
         stage('build') {
             parallel {
-                stage('build') {
+                stage('build api') {
                     steps {
                         dir('environments/app/docker') {
                             script {
@@ -44,7 +46,7 @@ pipeline {
                 }
             }
         }
-        stage('deploy') {
+        stage('deploy to e2e') {
             parallel {
                 stage('deploy api') {
                     steps {
@@ -114,6 +116,43 @@ pipeline {
                 //         }
                 //     }
                 // }
+            }
+        }
+
+        stage('push success docker image') {
+            steps {
+                script {
+                    """ docker pull "$API_IMAGE:$COMMIT_HASH" """
+                    """ docker tag "$API_IMAGE:$COMMIT_HASH" "$API_IMAGE:latest" """
+                    """ docker push "$API_IMAGE:latest" """
+                    """ docker pull "$DB_IMAGE:$COMMIT_HASH" """
+                    """ docker tag "$DB_IMAGE:$COMMIT_HASH" "$API_IMAGE:latest" """
+                    """ docker push "$DB_IMAGE:latest" """
+                }
+            }
+        }
+        stage('deploy to dev') {
+            parallel {
+                stage('deploy api') {
+                    steps {
+                        dir('environments') {
+                            script {
+                                sh """helm template app/k8s/ | kubectl --context minikube apply -f -"""
+                                sh """kubectl wait --for=condition=ready pod -l name=sns-api -n sns-e2e --timeout=120s"""
+                            }
+                        }
+                    }
+                }
+                stage('deploy db') {
+                    steps {
+                        dir('environments') {
+                            script {
+                                sh """helm template db/k8s/ | kubectl --context minikube apply -f -"""
+                                sh """kubectl wait --for=condition=ready pod -l name=sns-db -n sns-e2e --timeout=120s"""
+                            }
+                        }
+                    }
+                }
             }
         }
     }
