@@ -91,7 +91,7 @@ pipeline {
                     }
                     steps {
                         dir("e2e") {
-                            sh """ gradle gauge -Ptags=\"sequential\" """
+                            sh """ gradle :sns-api-e2e:gauge -Ptags=sequential """
                         }
                     }
                 }
