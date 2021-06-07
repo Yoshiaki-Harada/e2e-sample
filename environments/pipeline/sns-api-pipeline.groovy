@@ -2,6 +2,39 @@ def svcPort(context, ns, svc) {
     return sh(script: "kubectl --context ${context} get svc ${svc} -n ${ns} -o=jsonpath=\'{.spec.ports[0].nodePort}\'", returnStdout: true)
 }
 
+def namespaces=["sns-e2e", "sns-e2e-seq"]
+def parallelDeploy = namespaces.collectEntries {
+    ["${it}" : deploy(it)]
+}
+
+def deploy(ns) {
+    return {
+        stages("deploy to ${ns}") {
+            stage('deploy api to $ns') {
+                steps {
+                    dir('environments') {
+                        script {
+                            sh """helm template --set namespace=$ns app/k8s/ | kubectl --context minikube apply -f -"""
+                            sh """kubectl wait --for=condition=ready pod -l name=sns-api -n sns --timeout=120s"""
+                        }
+                    }
+                }
+            }
+            stage('deploy db to $ns') {
+                steps {
+                    dir('environments') {
+                        script {
+                            sh """helm template --set namespace=$ns db/k8s/ | kubectl --context minikube apply -f -"""
+                            sh """kubectl wait --for=condition=ready pod -l name=sns-db -n sns --timeout=120s"""
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 pipeline {
     agent any
     options {
@@ -14,29 +47,9 @@ pipeline {
             }
         }
         stage('deploy') {
-            parallel {
-                namespaces=["sns-e2e", "sns-e2e-seq"]
-                namespaces.each {ns ->
-                stage('deploy api to $ns') {
-                    steps {
-                        dir('environments') {
-                            script {
-                                sh """helm template --set namespace=$ns app/k8s/ | kubectl --context minikube apply -f -"""
-                                sh """kubectl wait --for=condition=ready pod -l name=sns-api -n sns --timeout=120s"""
-                            }
-                        }
-                    }
-                }
-                stage('deploy db to $ns') {
-                    steps {
-                        dir('environments') {
-                            script {
-                                sh """helm template --set namespace=$ns db/k8s/ | kubectl --context minikube apply -f -"""
-                                sh """kubectl wait --for=condition=ready pod -l name=sns-db -n sns --timeout=120s"""
-                            }
-                        }
-                    }
-                }
+            steps {
+                script {
+                    parallel parallelDeploy
                 }
             }
         }
