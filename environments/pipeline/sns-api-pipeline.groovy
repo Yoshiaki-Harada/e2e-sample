@@ -2,6 +2,8 @@ def svcPort(context, ns, svc) {
     return sh(script: "kubectl --context ${context} get svc ${svc} -n ${ns} -o=jsonpath=\'{.spec.ports[0].nodePort}\'", returnStdout: true)
 }
 
+def COMMIT_HASH=""
+
 pipeline {
     agent any
     options {
@@ -13,13 +15,36 @@ pipeline {
                 checkout scm
             }
         }
+        stage('Commit Hash') {
+            script {
+                COMMIT_HASH = sh(returnStdout: true, script: 'echo -n `git rev-parse --short HEAD`')
+            }
+        }
+        stage('build') {
+            parallel {
+                stage('build') {
+                    dir('environments/app/docker') {
+                        script {
+                            sh "./build_and_push.sh $COMMIT_HASH"
+                        }
+                    }
+                }
+                stage("build db") {
+                    dir('environments/db/docker') {
+                        script {
+                            sh "./build_and_push.sh $COMMIT_HASH"
+                        }
+                    }
+                }
+            }
+        }
         stage('deploy') {
             parallel {
                 stage('deploy api') {
                     steps {
                         dir('environments') {
                             script {
-                                sh """helm template --set namespace=sns-e2e app/k8s/ | kubectl --context minikube apply -f -"""
+                                sh """helm template --set namespace=sns-e2e --set revision=$COMMIT_HASH app/k8s/ | kubectl --context minikube apply -f -"""
                                 sh """kubectl wait --for=condition=ready pod -l name=sns-api -n sns-e2e --timeout=120s"""
                             }
                         }
@@ -29,7 +54,7 @@ pipeline {
                     steps {
                         dir('environments') {
                             script {
-                                sh """helm template --set namespace=sns-e2e db/k8s/ | kubectl --context minikube apply -f -"""
+                                sh """helm template --set namespace=sns-e2e --set revision=$COMMIT_HASH db/k8s/ | kubectl --context minikube apply -f -"""
                                 sh """kubectl wait --for=condition=ready pod -l name=sns-db -n sns-e2e --timeout=120s"""
                             }
                         }
