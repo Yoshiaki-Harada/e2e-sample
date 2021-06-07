@@ -1,6 +1,7 @@
 def ENV=""
 def NS=""
 pipeline {
+    agent any
     parameters {
         string(name: 'COMMIT_HASH', defaultValue: 'main', description: 'Git Hash')
         string(name: 'ENV', defaultValue: 'sns', description: 'Helm Values file')
