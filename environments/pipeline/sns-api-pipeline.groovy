@@ -47,27 +47,25 @@ pipeline {
             }
         }
         stage('deploy to e2e') {
-            parallel {
-                stage('deploy api') {
-                    steps {
-                        dir('environments') {
-                            script {
-                                sh """helm template --set namespace=sns-e2e --set revision=$COMMIT_HASH app/k8s/ | kubectl --context minikube apply -f -"""
-                                sh """kubectl wait --for=condition=ready pod -l name=sns-api -n sns-e2e --timeout=120s"""
-                            }
-                        }
-                    }
-                }
-                stage('deploy db') {
-                    steps {
-                        dir('environments') {
-                            script {
-                                sh """helm template --set namespace=sns-e2e --set revision=$COMMIT_HASH db/k8s/ | kubectl --context minikube apply -f -"""
-                                sh """kubectl wait --for=condition=ready pod -l name=sns-db -n sns-e2e --timeout=120s"""
-                            }
-                        }
-                    }
-                }
+            steps {
+                build(
+                    job: "sns-api-deployment",
+                    parameters: [[
+                        $class: 'StringPrameterValue',
+                        name: 'COMMIT_HASH',
+                        value: COMMIT_HASH
+                    ],
+                    [
+                        $class: 'StringPrameterValue',
+                        name: 'ENV',
+                        value: "e2e"
+                    ],
+                    [
+                        $class: 'StringPrameterValue',
+                        name: 'NAMESPACE',
+                        value: "sns-e2e"
+                    ]]
+                )
             }
         }
         stage('e2e') {
