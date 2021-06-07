@@ -4,8 +4,8 @@ pipeline {
     agent any
     parameters {
         string(name: 'COMMIT_HASH', defaultValue: 'main', description: 'Git Hash')
-        string(name: 'ENV', defaultValue: 'sns', description: 'Helm Values file')
-        string(name: 'NAMESPACE', defaultValue: 'sns', description: 'Deploy Namespace')
+        string(name: 'ENV', defaultValue: 'e2e', description: 'Helm Values file')
+        string(name: 'NAMESPACE', defaultValue: 'sns-e2e', description: 'Deploy Namespace')
     }
     stages {
         stage('checkout scm') {
@@ -36,7 +36,7 @@ pipeline {
                     steps {
                         dir('environments') {
                             script {
-                                sh """helm template --set namespace=sns-e2e --set revision=${COMMIT_HASH} -f values-${ENV} app/k8s/ | kubectl --context minikube apply -f -"""
+                                sh """helm template --set revision=${COMMIT_HASH} -f values-${ENV}.yaml app/k8s/ | kubectl --context minikube apply -f -"""
                                 sh """kubectl wait --for=condition=ready pod -l name=sns-api -n ${NS} --timeout=120s"""
                             }
                         }
@@ -46,7 +46,7 @@ pipeline {
                     steps {
                         dir('environments') {
                             script {
-                                sh """helm template --set namespace=sns-e2e --set revision=${COMMIT_HASH} values-${ENV} db/k8s/ | kubectl --context minikube apply -f -"""
+                                sh """helm template --set revision=${COMMIT_HASH} values-${ENV}.yaml db/k8s/ | kubectl --context minikube apply -f -"""
                                 sh """kubectl wait --for=condition=ready pod -l name=sns-db -n ${NS} --timeout=120s"""
                             }
                         }
