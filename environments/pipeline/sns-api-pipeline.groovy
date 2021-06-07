@@ -91,7 +91,7 @@ pipeline {
                     }
                     steps {
                         dir("e2e") {
-                            sh """ gradle :sns-api-e2e:gauge -Ptags=sequential """
+                            sh """ gradle clean :sns-api-e2e:gauge -Ptags=sequential """
                         }
                     }
                 }
