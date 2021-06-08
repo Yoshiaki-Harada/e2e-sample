@@ -101,7 +101,7 @@ pipeline {
                     def apiImage = docker.image("$REGISTORY/sns-api:$COMMIT_HASH")
                     apiImage.pull()
                     apiImage.push("latest")
-                    def dbImage = docker.image("$REGISTORY/db:$COMMIT_HASH")
+                    def dbImage = docker.image("$REGISTORY/sns-db:$COMMIT_HASH")
                     dbImage.pull()
                     dbImage.push("latest")
                 }
