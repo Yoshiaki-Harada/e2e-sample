@@ -3,9 +3,7 @@ def svcPort(context, ns, svc) {
 }
 
 def COMMIT_HASH=""
-def RESISTORY="haradayoshiaki777"
-def API_IMAGE="haradayoshiaki777/sns-db"
-def DB_IMAGE="haradayoshiaki777/sns-api"
+def REGISTORY="haradayoshiaki777"
 def DB_NS="sns"
 pipeline {
     agent any
