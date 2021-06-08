@@ -14,21 +14,17 @@ pipeline {
         E2E_ARGS="-e API_URL=$API_URL -e DB_URL=$DB_URL -u root -v /var/jenkins_home/workspace/sns-api-pipeline/e2e:/home/gradle/project -w /home/gradle/project"
     }
     stages {
-        stage('e2e') {
-            parallel {
-                stage('sequential') {
-                    agent {
-                        docker {
-                            image E2E_IMAGE
-                            args E2E_ARGS
-                            reuseNode true
-                        }
-                    }
-                    steps {
-                        dir("e2e") {
-                            sh """ gradle clean :sns-api-e2e:gauge -Ptags=sequential """
-                        }
-                    }
+        stage('sequential') {
+            agent {
+                docker {
+                    image E2E_IMAGE
+                    args E2E_ARGS
+                    reuseNode true
+                }
+            }
+            steps {
+                dir("e2e") {
+                    sh """ gradle clean :sns-api-e2e:gauge -Ptags=sequential """
                 }
             }
         }
