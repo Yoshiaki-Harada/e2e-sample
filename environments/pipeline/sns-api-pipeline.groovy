@@ -3,6 +3,7 @@ def svcPort(context, ns, svc) {
 }
 
 def COMMIT_HASH=""
+def RESISTORY="haradayoshiaki777"
 def API_IMAGE="haradayoshiaki777/sns-db"
 def DB_IMAGE="haradayoshiaki777/sns-api"
 def DB_NS="sns"
@@ -99,12 +100,12 @@ pipeline {
         stage('push success docker image') {
             steps {
                 script {
-                    """ docker pull "$API_IMAGE:$COMMIT_HASH" """
-                    """ docker tag "$API_IMAGE:$COMMIT_HASH" "$API_IMAGE:latest" """
-                    """ docker push "$API_IMAGE:latest" """
-                    """ docker pull "$DB_IMAGE:$COMMIT_HASH" """
-                    """ docker tag "$DB_IMAGE:$COMMIT_HASH" "$API_IMAGE:latest" """
-                    """ docker push "$DB_IMAGE:latest" """
+                    def apiImage = docker.image("$REGISTORY/sns-api:$COMMIT_HASH")
+                    apiImage.pull()
+                    apiImage.push("latest")
+                    def dbImage = docker.image("$REGISTORY/db:$COMMIT_HASH")
+                    dbImage.pull()
+                    dbImage.push("latest")
                 }
             }
         }
